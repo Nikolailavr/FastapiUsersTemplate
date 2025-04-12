@@ -13,7 +13,7 @@ from sqlalchemy.orm import (
     mapped_column,
 )
 
-from src.core.types.user_id import UserIdType
+from core.types.user_id import UserIdType
 from .base import Base
 
 if TYPE_CHECKING:

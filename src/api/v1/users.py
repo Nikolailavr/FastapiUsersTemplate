@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter
 
 from core.schemas.user import UserCreate
-from src.core.depends import SessionDep
+from src.core.dependencies import SessionDep
 from src.core.schemas.user import UserRead
 from src.crud.users import UserCRUD
 
