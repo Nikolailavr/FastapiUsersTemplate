@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 class User(Base, IdIntPkMixin, SQLAlchemyBaseUserTable[int]):
     name: Mapped[str] = mapped_column(nullable=True)
-    phone: Mapped[str] = mapped_column(unique=True)
+    phone: Mapped[str] = mapped_column(unique=True, nullable=True)
 
     @classmethod
     def get_db(cls, session: "AsyncSession"):
