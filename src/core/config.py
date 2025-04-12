@@ -14,11 +14,19 @@ class RunConfig(BaseModel):
 class APIPrefixV1(BaseModel):
     prefix: str = "/v1"
     users: str = "/users"
+    auth: str = "/auth"
 
 
 class APIPrefix(BaseModel):
     prefix: str = "/api"
     v1: APIPrefixV1 = APIPrefixV1()
+
+    @property
+    def bearer_token_url(self) -> str:
+        # api/v1/auth/login
+        parts = (self.prefix, self.v1.prefix, self.v1.auth, "/login")
+        path = "".join(parts)
+        return path.removeprefix("/")
 
 
 class DatabaseConfig(BaseModel):
@@ -35,6 +43,11 @@ class DatabaseConfig(BaseModel):
         "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
         "pk": "pk_%(table_name)s",
     }
+
+class AccessToken(BaseModel):
+    lifetime_seconds: int = 3600
+    reset_password_token_secret: str
+    verification_token_secret: str
 
 
 class Settings(BaseSettings):
