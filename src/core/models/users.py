@@ -15,5 +15,5 @@ class User(Base, IdIntPkMixin, SQLAlchemyBaseUserTable[int]):
     phone: Mapped[str] = mapped_column(unique=True)
 
     @classmethod
-    def get_db(cls, session: AsyncSession):
+    def get_db(cls, session: "AsyncSession"):
         return SQLAlchemyUserDatabase(session, User)
