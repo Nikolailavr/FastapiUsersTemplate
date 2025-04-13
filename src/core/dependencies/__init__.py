@@ -1,5 +1,5 @@
 __all__ = (
-    "SessionDep"
+    "SessionDep",
 )
 
 from .session import SessionDep

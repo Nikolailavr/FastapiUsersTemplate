@@ -1,9 +1,38 @@
+import logging
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from uvicorn.config import LOGGING_CONFIG
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+LOG_DEFAULT_FORMAT = (
+    "[%(asctime)s] | %(module)20s:%(lineno)-3d | %(levelname)-8s - %(message)s"
+)
+
+
+class LoggingConfig(BaseModel):
+    log_level: Literal[
+        "debug",
+        "info",
+        "warning",
+        "error",
+        "critical",
+    ] = "info"
+    log_format: str = LOG_DEFAULT_FORMAT
+
+    @property
+    def log_level_value(self) -> int:
+        return logging.getLevelNamesMapping()[self.log_level.upper()]
+
+    @property
+    def fastapi_config(self) -> dict:
+        fastapi_cfg = LOGGING_CONFIG
+        fastapi_cfg['formatters']['access']['fmt']=self.log_format
+        fastapi_cfg['formatters']['default']['fmt']=self.log_format
+        return fastapi_cfg
 
 
 class RunConfig(BaseModel):
@@ -15,6 +44,7 @@ class APIPrefixV1(BaseModel):
     prefix: str = "/v1"
     users: str = "/users"
     auth: str = "/auth"
+    groups: str = "/groups"
 
 
 class APIPrefix(BaseModel):
@@ -44,6 +74,7 @@ class DatabaseConfig(BaseModel):
         "pk": "pk_%(table_name)s",
     }
 
+
 class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
     reset_password_token_secret: str
@@ -62,6 +93,7 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
     api: APIPrefix = APIPrefix()
+    logging: LoggingConfig = LoggingConfig()
     db: DatabaseConfig
     access_token: AccessToken
 

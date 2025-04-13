@@ -1,17 +1,22 @@
-from typing import List
-
 from fastapi import APIRouter
 
-from core.schemas.users import UserCreate
-from src.core.dependencies import SessionDep
-from src.core.schemas.users import UserRead
-from src.crud.users import UserCRUD
+from api.v1.fastapi_users import fastapi_users
+from core.config import settings
+from core.schemas.user import (
+    UserRead,
+    UserUpdate,
+)
 
+router = APIRouter(
+    tags=["Users"],
+    prefix=settings.api.v1.users
+)
 
-
-router = APIRouter(tags=["Users"])
-
-
-@router.get("/", response_model=List[UserRead])
-async def get_users(session: SessionDep):
-    return await UserCRUD.get_all_users(session=session)
+# /me
+# /{id}
+router.include_router(
+    router=fastapi_users.get_users_router(
+        UserRead,
+        UserUpdate,
+    ),
+)

@@ -1,6 +1,6 @@
 __all_ = (
     "get_user_manager",
-    "authentication_backend"
+    "authentication_backend",
 )
 
 from .user_manager import get_user_manager

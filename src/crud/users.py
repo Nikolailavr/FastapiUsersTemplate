@@ -2,7 +2,6 @@ from sqlalchemy import select, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import User
-from core.schemas.users import UserCreate
 
 
 class UserCRUD:

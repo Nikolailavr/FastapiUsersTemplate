@@ -1,3 +1,6 @@
+from typing import Annotated
+
+from fastapi import Depends
 from fastapi_users import FastAPIUsers
 
 from core.models import User
@@ -11,5 +14,8 @@ fastapi_users = FastAPIUsers[User, UserIdType](
     [authentication_backend],
 )
 
-# current_active_user = fastapi_users.current_user(active=True)
-# current_active_superuser = fastapi_users.current_user(active=True, superuser=True)
+current_active_user = fastapi_users.current_user(active=True)
+current_active_superuser = fastapi_users.current_user(active=True, superuser=True)
+
+CurrentUserDep = Annotated[User, Depends(current_active_user)]
+CurrentSuperUserDep = Annotated[User, Depends(current_active_superuser)]
